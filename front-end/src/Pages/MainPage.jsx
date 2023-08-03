@@ -54,8 +54,6 @@ export default class MainPage extends React.Component{
             search: this.state.search,
         }
 
-        console.log(data)
-
         await axios({
             method: 'post',
             url: api_url+`calls`,
