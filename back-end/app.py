@@ -107,7 +107,7 @@ def calls():
         + '&appid={}'
         ).format(lat,lon,forecast_key)
     fc_response = requests.get(fc).json()
-    app.logger.info(fc_response)
+    app.logger.info('Weather ' + fc_response["weather"][0]["main"] + ' Min: ' + str(fc_response["main"]["temp_min"])+ ' Max: ' + str(fc_response["main"]["temp_max"]))
 
     ##get currency code based on city name / lt lg
     currency_code = ''
