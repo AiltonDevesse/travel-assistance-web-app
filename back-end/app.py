@@ -50,7 +50,7 @@ connection = psycopg2.connect(
 
 
 @app.route('/api/authenticate', methods=['POST'])
-def create_user():
+def authenticate():
     data = request.get_json()
     email = data['email']
     password = data['password']
@@ -66,7 +66,7 @@ def create_user():
 
 
 @app.route('/api/register', methods=['POST'])
-def create_user():
+def register():
     data = request.get_json()
     nome = data['nome']
     apelido = data['apelido']
@@ -85,7 +85,7 @@ def create_user():
 
 
 @app.route('/api/calls', methods=['GET','POST'])
-def my_index():
+def calls():
     data = request.get_json()
     search = data['search']
 
