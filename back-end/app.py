@@ -15,6 +15,14 @@ INSERT_USER = (
     "INSERT INTO users (nome, apelido, email, password) values(%s,%s,%s,%s);"
 )
 
+SELECT_USER = (
+    "SELECT * FROM users WHERE email = %s;"
+)
+
+AUTHENTICATE = (
+    "SELECT * FROM users WHERE email = %s AND password = %s;"
+)
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -48,9 +56,13 @@ def create_user():
     password = data['password']
     with connection: 
         with connection.cursor() as cursor:
-            cursor.execute(CREATE_USERS_TABLE)
-            cursor.execute(INSERT_USER, (nome, apelido, email, password))
-    return {"message":"Registration Complete"}, 200
+            cursor.execute(AUTHENTICATE,(email,password,))
+            user = cursor.fetchone()
+            if user:
+                return {"message":"Authenticated with Success"}, 200
+            
+            print(user)
+    return {"E-mail or Password incorrect"}, 401
 
 
 @app.route('/api/register', methods=['POST'])
@@ -63,7 +75,12 @@ def create_user():
     with connection: 
         with connection.cursor() as cursor:
             cursor.execute(CREATE_USERS_TABLE)
-            cursor.execute(INSERT_USER, (nome, apelido, email, password))
+            cursor.execute(SELECT_USER,(email,))
+            user = cursor.fetchone()
+            print(user)
+            if user:
+                return {"Account already exists"}, 403
+            cursor.execute(INSERT_USER, (nome, apelido, email, password,))
     return {"message":"Registration Complete"}, 200
 
 
