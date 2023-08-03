@@ -105,7 +105,7 @@ export default class SignUp extends React.Component{
                 console.log(res)
                 notify(res.data.message);
             }).catch((error) => {
-                notify(error)
+                notify(error.response.data.message)
             });
         }
         else

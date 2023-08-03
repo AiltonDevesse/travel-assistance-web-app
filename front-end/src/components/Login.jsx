@@ -83,8 +83,7 @@ export default class Login extends React.Component{
                     localStorage.setItem("token", res.data.token);
                     this.props.handleSucessfulAuth("a");
                 }).catch((error) => { 
-                    console.log(error)
-                    notify(error);
+                    notify(error.response.data.message);
             });
         }
         else

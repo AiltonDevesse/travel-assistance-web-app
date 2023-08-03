@@ -67,8 +67,7 @@ export default class MainPage extends React.Component{
             this.setState({forecast: res.data.forecast, loading: res.data.exchangerate, gdp: res.data.gdp})
         })
         .catch(error => {
-            console.log(error)
-            notify(error);
+            notify(error.response.data.message);
         });
 
         this.setState({loading: false});

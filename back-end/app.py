@@ -3,7 +3,7 @@ import requests
 import json
 import pprint as pp
 import psycopg2
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
 
@@ -26,13 +26,12 @@ AUTHENTICATE = (
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app,supports_credentials=True)
-
-cors = CORS(app,resources={
-    r"/":{
+CORS(app,resources={
+    r"/*":{
         "origin": "*"
     }
 })
+
 forecast_key= os.getenv("FORECAST_KEY")
 forecast_api= os.getenv("FORECAST_API")
 exchange_rate_key= os.getenv("EXCHANGERATE_KEY")
@@ -56,13 +55,14 @@ def authenticate():
     password = data['password']
     with connection: 
         with connection.cursor() as cursor:
+            cursor.execute(CREATE_USERS_TABLE)
             cursor.execute(AUTHENTICATE,(email,password,))
             user = cursor.fetchone()
             if user:
-                return {"message":"Authenticated with Success"}, 200
+                return jsonify({"message":"Authenticated with Success"}), 200
             
             print(user)
-    return {"error":"E-mail or Password incorrect"}, 401
+    return jsonify({"message":"E-mail or Password incorrect"}), 401
 
 
 @app.route('/api/register', methods=['POST'])
@@ -79,9 +79,9 @@ def register():
             user = cursor.fetchone()
             print(user)
             if user:
-                return {"error":"Account already exists"}, 403
+                return jsonify({"message":"Account already exists"}), 403
             cursor.execute(INSERT_USER, (nome, apelido, email, password,))
-    return {"message":"Registration Complete"}, 200
+    return jsonify({"message":"Registration Complete"}), 200
 
 
 @app.route('/api/calls', methods=['GET','POST'])
