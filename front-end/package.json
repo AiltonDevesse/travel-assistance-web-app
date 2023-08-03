@@ -41,7 +41,7 @@
   },
   "react-dotenv": {
     "whitelist": [
-      "REACT_APP_KEY"
+      "REACT_APP_API"
     ]
   },
   "eslintConfig": {

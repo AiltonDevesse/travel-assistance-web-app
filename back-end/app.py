@@ -18,6 +18,13 @@ INSERT_USER = (
 load_dotenv()
 
 app = Flask(__name__)
+CORS(app)
+
+cors = CORS(app,resources={
+    r"/":{
+        "origin": "*"
+    }
+})
 forecast_key= os.getenv("FORECAST_KEY")
 forecast_api= os.getenv("FORECAST_API")
 exchange_rate_key= os.getenv("EXCHANGERATE_KEY")
@@ -29,19 +36,24 @@ connection = psycopg2.connect(
     database="travel_mpesa", 
     user="ailton",
     password="pass123",
-    host="127.0.0.1"
+    host="postgres",
+    port="5432"
 )
 
-CORS(app)
 
-cors = CORS(app,resources={
-    r"/":{
-        "origin": "*"
-    }
-})
+@app.route('/api/authenticate', methods=['POST'])
+def create_user():
+    data = request.get_json()
+    email = data['email']
+    password = data['password']
+    with connection: 
+        with connection.cursor() as cursor:
+            cursor.execute(CREATE_USERS_TABLE)
+            cursor.execute(INSERT_USER, (nome, apelido, email, password))
+    return {"message":"Registration Complete"}, 200
 
 
-@app.route('/api/register', methods=['GET','POST'])
+@app.route('/api/register', methods=['POST'])
 def create_user():
     data = request.get_json()
     nome = data['nome']

@@ -5,8 +5,7 @@ import {toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import env from "react-dotenv";
 
-const api_url = env.REACT_APP_API
-
+const api_url = process.env.REACT_APP_API//env.REACT_APP_API
 
 toast.configure()
 const notify = (message) => {
@@ -77,14 +76,15 @@ export default class Login extends React.Component{
         }
 
         this.setState({loading: true})
-        
+
         if(formValid(this.state)) {
             axios.post(api_url+`authenticate`, credenciais)
                 .then(res => {
                     localStorage.setItem("token", res.data.token);
                     this.props.handleSucessfulAuth("a");
-                }).catch((error) => { notify(error.response.data.message);
-                
+                }).catch((error) => { 
+                    console.log(error)
+                    notify(error.response.data.message);
             });
         }
         else
@@ -103,7 +103,7 @@ export default class Login extends React.Component{
             <div className="login-content">
                 <form id="formu" action="login" method="POST" onSubmit={this.handleSubmit} onChange={this.handleChange}>
                     <img src={plane} alt="plane"/>
-                    <h2 className="title">Bem-vindo</h2>
+                    <h2 className="title">Welcome</h2>
                     <div>
                         <div className="input-div one">
                             <div className="i">

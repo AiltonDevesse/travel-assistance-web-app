@@ -4,7 +4,7 @@ import {toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import env from "react-dotenv";
 
-const api_url = env.REACT_APP_API
+const api_url = process.env.REACT_APP_API//env.REACT_APP_API
 
 toast.configure()
 const notify = (message) => {

@@ -15,7 +15,7 @@ import '../css/tooplate-style.css'
 import plane from '../image/airplane_red.png'
 import env from "react-dotenv";
 
-const api_url = env.REACT_APP_API
+const api_url = process.env.REACT_APP_API//env.REACT_APP_API
 
 toast.configure()
 
