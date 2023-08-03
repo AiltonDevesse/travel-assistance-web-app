@@ -1,0 +1,58 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:11.5
+    restart: always
+    environment:
+      POSTGRES_USER: ailton
+      POSTGRES_PASSWORD: pass123
+      POSTGRES_DB: travel_mpesa
+    ports:
+      - 5432:5432
+    networks:
+      - travel-mpesa-developer
+    volumes:
+      - ./postgres-db:/var/lib/postgres/data
+
+  database-adminer:
+    container_name: database-adminer
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - travel-mpesa-developer
+    depends_on:
+      - postgres
+
+  back-end:
+    container_name: back-end
+    restart: unless-stopped
+    image: travel-back-end
+    build:
+      context: back-end
+      dockerfile: Dockerfile
+    ports:
+      - 8000:8000
+    networks:
+      - travel-mpesa-developer
+    depends_on:
+      - postgres
+
+  front-end:
+    container_name: front-end
+    restart: unless-stopped
+    image: travel-front-end
+    build:
+      context: front-end
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    networks:
+      - travel-mpesa-developer
+    depends_on:
+      - back-end
+
+networks:
+  travel-mpesa-developer:
