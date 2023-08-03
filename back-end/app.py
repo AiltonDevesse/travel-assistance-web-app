@@ -26,7 +26,7 @@ AUTHENTICATE = (
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+CORS(app,supports_credentials=True)
 
 cors = CORS(app,resources={
     r"/":{
@@ -62,7 +62,7 @@ def authenticate():
                 return {"message":"Authenticated with Success"}, 200
             
             print(user)
-    return {"E-mail or Password incorrect"}, 401
+    return {"error":"E-mail or Password incorrect"}, 401
 
 
 @app.route('/api/register', methods=['POST'])
@@ -79,7 +79,7 @@ def register():
             user = cursor.fetchone()
             print(user)
             if user:
-                return {"Account already exists"}, 403
+                return {"error":"Account already exists"}, 403
             cursor.execute(INSERT_USER, (nome, apelido, email, password,))
     return {"message":"Registration Complete"}, 200
 
@@ -129,4 +129,4 @@ def calls():
     print(gdp_response)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)

@@ -88,7 +88,7 @@ export default class SignUp extends React.Component{
         this.setState({ formErrors, [name]: value });
     }
 
-    handleSubmit = event => {
+    handleSubmit = async event => {
         event.preventDefault(); //evitar muitos cliques
         const credenciais = {
             nome: this.state.nome,
@@ -100,7 +100,7 @@ export default class SignUp extends React.Component{
         this.setState({loading: true})
         
         if(formValid(this.state)) {
-            axios.post(api_url+`register`, credenciais)
+            await axios.post(api_url+`register`, credenciais)
             .then(res => {
                 console.log(res)
                 notify(res.data.message);

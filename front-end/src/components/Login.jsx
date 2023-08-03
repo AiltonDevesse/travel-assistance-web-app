@@ -68,7 +68,7 @@ export default class Login extends React.Component{
         this.setState({ formErrors, [name]: value });
     }
 
-    handleSubmit = event => {
+    handleSubmit = async event => {
         event.preventDefault(); //evitar muitos cliques
         const credenciais = {
             email: this.state.email,
@@ -78,13 +78,13 @@ export default class Login extends React.Component{
         this.setState({loading: true})
 
         if(formValid(this.state)) {
-            axios.post(api_url+`authenticate`, credenciais)
+            await axios.post(api_url+`authenticate`, credenciais)
                 .then(res => {
                     localStorage.setItem("token", res.data.token);
                     this.props.handleSucessfulAuth("a");
                 }).catch((error) => { 
                     console.log(error)
-                    notify(error.response.data.message);
+                    notify(error);
             });
         }
         else

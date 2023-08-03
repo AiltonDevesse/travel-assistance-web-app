@@ -27,7 +27,6 @@ export default class MainPage extends React.Component{
 
     constructor(props){
         super(props);
-        
         this.state = {
             search: "",
             loading: false,
@@ -49,30 +48,36 @@ export default class MainPage extends React.Component{
         
         event.preventDefault();
 
-        this.setLoading({loading: true});
+        this.setState({loading: true});
 
         const data = {
-            token: localStorage.getItem('token'),    
             search: this.state.search,
         }
 
         console.log(data)
 
-        await axios.post(api_url+`calls`, data)
-            .then(res => {
-                console.log("done")
-                console.log(res)
-                this.setState({forecast: res.data.forecast, loading: res.data.exchangerate, gdp: res.data.gdp})
-            })
-            .catch(errors => {
-                console.log(errors)
-                notify(errors.data.message);
-            });
+        await axios({
+            method: 'post',
+            url: api_url+`calls`,
+            headers: {Authorization: `Bearer ${localStorage.getItem('token')}`},
+            withCredentials: true, 
+            data: data
+        })
+        .then(res => {
+            console.log("done")
+            console.log(res)
+            this.setState({forecast: res.data.forecast, loading: res.data.exchangerate, gdp: res.data.gdp})
+        })
+        .catch(error => {
+            console.log(error)
+            notify(error);
+        });
 
-        this.setLoading({loading: false});
+        this.setState({loading: false});
     }
 
     render(){
+        const {loading} = this.state;
         return( 
             <div>
                 <NavBar />
@@ -85,34 +90,30 @@ export default class MainPage extends React.Component{
                                         <img src={plane}/>
                                     </div>
                                     <div className="tabs-content">
-                                        <h4>Choose Your Direction:</h4>
+                                        <h4>Choose Your Destination:</h4>
                                         <div className="border-b border-gray-200 bg-white px-4 py-5 sm:px-6">
-                                            <form onSubmit={this.handleSubmit} >
+                                            <form method="POST" onSubmit={this.handleSubmit} onChange={this.handleChange}>
                                                 <div className="col-md-6">
-                                                    <div className="radio-select" id="trips">
-                                                        <div className="row" id="trips">
+                                                    <div className="city" id="city">
+                                                        <div className="row" id="city">
                                                             <div className="col-md-4 col-sm-5 col-xs-6">
-                                                                <label htmlFor="round">Search</label>
-                                                                <input type="text" name="search" id="search" value="" required="required"onChange={this.handleChange}/>
+                                                                <label htmlFor="search">Search</label>
+                                                                <fieldset> 
+                                                                    <input type="text" placeholder="London" name="search" id="search" required="required"/>
+                                                                    {!loading && (
+                                                                        <button type="submit" id="form-submit" className="btn">
+                                                                            Submit
+                                                                        </button>
+                                                                    )}
+                                                                    {loading && (
+                                                                        <button className="btn" disabled>
+                                                                            <i className="fas fa-spinner fa-spin"></i> Processing...
+                                                                        </button>
+                                                                    )}
+                                                                </fieldset>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-
-                                                <div className="col-md-12">    
-                                                    <fieldset> 
-                                                        <label htmlFor="card">Credit Card:</label>                           
-                                                        {!this.state.loading && (
-                                                            <button type="submit" id="form-submit" className="btn">
-                                                                Submit
-                                                            </button>
-                                                        )}
-                                                        {this.state.loading && (
-                                                            <button className="btn" disabled>
-                                                                <i className="fas fa-spinner fa-spin"></i> Processing...
-                                                            </button>
-                                                        )}
-                                                    </fieldset>
                                                 </div>
                                             </form>
                                         </div>
