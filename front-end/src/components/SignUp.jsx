@@ -102,7 +102,6 @@ export default class SignUp extends React.Component{
         if(formValid(this.state)) {
             await axios.post(api_url+`register`, credenciais)
             .then(res => {
-                console.log(res)
                 notify(res.data.message);
             }).catch((error) => {
                 notify(error.response.data.message)

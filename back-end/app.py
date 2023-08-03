@@ -1,4 +1,5 @@
 import os
+import logging
 import requests
 import json
 import pprint as pp
@@ -47,6 +48,9 @@ connection = psycopg2.connect(
     port="5432"
 )
 
+app.logger.setLevel(logging.DEBUG)
+stream_handler = logging.StreamHandler()
+app.logger.addHandler(stream_handler)
 
 @app.route('/api/authenticate', methods=['POST'])
 def authenticate():
@@ -60,8 +64,6 @@ def authenticate():
             user = cursor.fetchone()
             if user:
                 return jsonify({"message":"Authenticated with Success"}), 200
-            
-            print(user)
     return jsonify({"message":"E-mail or Password incorrect"}), 401
 
 
@@ -77,7 +79,6 @@ def register():
             cursor.execute(CREATE_USERS_TABLE)
             cursor.execute(SELECT_USER,(email,))
             user = cursor.fetchone()
-            print(user)
             if user:
                 return jsonify({"message":"Account already exists"}), 403
             cursor.execute(INSERT_USER, (nome, apelido, email, password,))
@@ -94,15 +95,11 @@ def calls():
         + '?q={}'
         + '&limit={}'
         + '&appid={}'
-        ).format(search,5,forecast_key)
-
-    print(lt_lg)
+        ).format(search,1,forecast_key)
     lt_lg_response = requests.get(lt_lg).json()
-    print(lt_lg_response)
-
-    lat = ''
-    lon = ''
-
+    lat = lt_lg_response[0]["lat"]
+    lon = lt_lg_response[0]["lon"]
+    
     fc = (forecast_api
         + 'data/2.5/weather'
         + '?lat={}'
@@ -110,23 +107,23 @@ def calls():
         + '&appid={}'
         ).format(lat,lon,forecast_key)
     fc_response = requests.get(fc).json()
-    print(fc_response)
+    app.logger.info(fc_response)
 
     ##get currency code based on city name / lt lg
-
+    currency_code = ''
     ex = (exchange_rate_api
         + 'latest'
         + '?access_key={}'
         + '&base={}'
         ).format(exchange_rate_key, currency_code)
     ex_response = requests.get(ex).json()
-    print(ex_response)
+    app.logger.info(ex_response)
 
     gdp = (gdp_api
         + '&key={}'
         ).format(gdp_key)
     gdp_response = requests.get(gdp).json()
-    print(gdp_response)
+    app.logger.info(gdp_response)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)

@@ -54,13 +54,7 @@ export default class MainPage extends React.Component{
             search: this.state.search,
         }
 
-        await axios({
-            method: 'post',
-            url: api_url+`calls`,
-            headers: {Authorization: `Bearer ${localStorage.getItem('token')}`},
-            withCredentials: true, 
-            data: data
-        })
+        await axios.post(api_url+`calls`,data)
         .then(res => {
             console.log("done")
             console.log(res)
