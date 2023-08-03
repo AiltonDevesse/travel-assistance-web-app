@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import avatar from '../image/avatar.svg';
+import plane from '../image/airplane_red.png'
 import {toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import env from "react-dotenv";
@@ -66,7 +66,7 @@ export default class Login extends React.Component{
             default:
                 break;
         }
-        this.setState({ formErrors, [name]: value }, () => console.log(this.state));
+        this.setState({ formErrors, [name]: value });
     }
 
     handleSubmit = event => {
@@ -102,7 +102,7 @@ export default class Login extends React.Component{
         return( 
             <div className="login-content">
                 <form id="formu" action="login" method="POST" onSubmit={this.handleSubmit} onChange={this.handleChange}>
-                    <img src={avatar} alt="avatar"/>
+                    <img src={plane} alt="plane"/>
                     <h2 className="title">Bem-vindo</h2>
                     <div>
                         <div className="input-div one">

@@ -85,7 +85,7 @@ export default class SignUp extends React.Component{
             default:
                 break;
         }
-        this.setState({ formErrors, [name]: value }, () => console.log(this.state));
+        this.setState({ formErrors, [name]: value });
     }
 
     handleSubmit = event => {

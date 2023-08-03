@@ -40,9 +40,9 @@ export default class MainPage extends React.Component{
     }
 
     handleChange(event) {
-        const { name, value } = event.target;
+        const { value } = event.target;
 
-        this.setState({ [name]: value }, () => console.log(this.state));
+        this.setState({ search: value });
     }
  
     handleSubmit = async event => {
@@ -132,7 +132,10 @@ export default class MainPage extends React.Component{
                                                     Exchange rate:
                                                 </div>
                                                 <div className="row">  
-                                                    dgggg
+                                                    Population
+                                                </div>
+                                                <div className="row">  
+                                                    GDP
                                                 </div>            
                                             </div>
                                         </div>

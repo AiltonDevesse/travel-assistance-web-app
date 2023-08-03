@@ -19,15 +19,9 @@ export default class footer extends React.Component{
                         </div>
                         <div className="col-md-12"> 
                             <ul className="social-icons">
-                                <li><a href="facebook.com"><i className="fa fa-facebook"></i></a></li>
                                 <li><a href="twitter.com"><i className="fa fa-twitter"></i></a></li>
                                 <li><a href="linkedin.com"><i className="fa fa-linkedin"></i></a></li>
-                                <li><div href="#"><i className="fa fa-rss"></i></div></li>
-                                <li><div href="#"><i className="fa fa-behance"></i></div></li>
                             </ul>
-                        </div>
-                        <div className="col-md-12">
-                            <p/>Copyright &copy; Grupo 7A
                         </div>
                     </div>
                 </div>
