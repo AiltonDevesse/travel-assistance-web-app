@@ -38,9 +38,7 @@ forecast_key= os.getenv("FORECAST_KEY")
 forecast_api= os.getenv("FORECAST_API")
 exchange_rate_key= os.getenv("EXCHANGERATE_KEY")
 exchange_rate_api= os.getenv("EXCHANGERATE_API")
-gdp_key= os.getenv("GDP_KEY")
 gdp_api= os.getenv("GDP_API")
-bd_url= os.getenv("DATABASE_URL")
 connection = psycopg2.connect(
     database="travel_mpesa", 
     user="ailton",
@@ -119,14 +117,21 @@ def calls():
         ).format(exchange_rate_key, currency_code)
     ex_response = requests.get(ex).json()
     exchangerate = ex_response["rates"]
-
-    #g = (gdp_api
-    #    + '&key={}'
-    #    ).format(gdp_key)
-    #gdp_response = requests.get(gdp).json()
-    #app.logger.info(gdp_response)
-    gdp = ""
     
-    return jsonify({"forecast":forecast,"exchangerate": exchangerate,"gdp":gdp}), 200
+    pop = (gdp_api
+        + '{}/'
+        + 'indicator/SP.POP.TOTL?format=json&date=2022' #2022 porque nao tem nenhuma actualizacao de 2023
+        ).format(country)
+    pop_response = requests.get(pop).json()
+    population = pop_response[1][0]["value"]
+    
+    g = (gdp_api
+    + '{}/'
+    + 'indicator/NY.GDP.PCAP.CD?format=json&date=2022' #2022 porque nao tem nenhuma actualizacao de 2023
+    ).format(country)
+    gdp_response = requests.get(g).json()
+    gdp = gdp_response[1][0]["value"]
+    
+    return jsonify({"forecast":forecast,"exchangerate": exchangerate, "population": population, "gdp":gdp}), 200
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)
