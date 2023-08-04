@@ -3,3 +3,4 @@ requests
 flask_cors
 python-dotenv
 psycopg2-binary
+countryinfo

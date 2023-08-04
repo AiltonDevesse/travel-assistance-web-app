@@ -4,6 +4,7 @@ import requests
 import json
 import pprint as pp
 import psycopg2
+from countryinfo import CountryInfo
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -99,6 +100,8 @@ def calls():
     lt_lg_response = requests.get(lt_lg).json()
     lat = lt_lg_response[0]["lat"]
     lon = lt_lg_response[0]["lon"]
+    country = lt_lg_response[0]["country"]
+    currency_code = CountryInfo(country).currencies()[0]
     
     fc = (forecast_api
         + 'data/2.5/weather'
@@ -107,23 +110,24 @@ def calls():
         + '&appid={}'
         ).format(lat,lon,forecast_key)
     fc_response = requests.get(fc).json()
-    app.logger.info('Weather ' + fc_response["weather"][0]["main"] + ' Min: ' + str(fc_response["main"]["temp_min"])+ ' Max: ' + str(fc_response["main"]["temp_max"]))
+    forecast = 'Weather ' + fc_response["weather"][0]["main"] + ' Min: ' + str(fc_response["main"]["temp_min"])+ ' Max: ' + str(fc_response["main"]["temp_max"])
 
-    ##get currency code based on city name / lt lg
-    currency_code = ''
     ex = (exchange_rate_api
         + 'latest'
         + '?access_key={}'
         + '&base={}'
         ).format(exchange_rate_key, currency_code)
     ex_response = requests.get(ex).json()
-    app.logger.info(ex_response)
+    exchangerate = ex_response["rates"]
+    app.logger.info(exchangerate)
 
-    gdp = (gdp_api
-        + '&key={}'
-        ).format(gdp_key)
-    gdp_response = requests.get(gdp).json()
-    app.logger.info(gdp_response)
-
+    #g = (gdp_api
+    #    + '&key={}'
+    #    ).format(gdp_key)
+    #gdp_response = requests.get(gdp).json()
+    #app.logger.info(gdp_response)
+    gdp = ""
+    
+    return jsonify({"forecast":forecast,"exchangerate": exchangerate,"gdp":gdp}), 200
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)

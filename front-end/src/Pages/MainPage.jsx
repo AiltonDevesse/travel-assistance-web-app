@@ -56,7 +56,6 @@ export default class MainPage extends React.Component{
 
         await axios.post(api_url+`calls`,data)
         .then(res => {
-            console.log("done")
             console.log(res)
             this.setState({forecast: res.data.forecast, loading: res.data.exchangerate, gdp: res.data.gdp})
         })
@@ -69,6 +68,9 @@ export default class MainPage extends React.Component{
 
     render(){
         const {loading} = this.state;
+        const {forecast} = this.state;
+        const {exchangerate} = this.state;
+        const {gdp} = this.state;
         return( 
             <div>
                 <NavBar />
@@ -115,19 +117,19 @@ export default class MainPage extends React.Component{
                                 <section id="first-tab-group" className="tabgroup">
                                     <div id="tab1">
                                         <div className="submit-form">
-                                            <h4>Check availability for <em>direction</em>:</h4>
+                                            <h4>Destiny condition:</h4>
                                             <div id="form-submit">
                                                 <div className="row">  
-                                                    Forecast:
+                                                    Forecast: {forecast}
                                                 </div> 
                                                 <div className="row">
-                                                    Exchange rate:
+                                                    Exchange rate: {exchangerate}
                                                 </div>
                                                 <div className="row">  
-                                                    Population
+                                                    Population {gdp}
                                                 </div>
                                                 <div className="row">  
-                                                    GDP
+                                                    GDP {gdp}
                                                 </div>            
                                             </div>
                                         </div>
