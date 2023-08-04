@@ -119,7 +119,6 @@ def calls():
         ).format(exchange_rate_key, currency_code)
     ex_response = requests.get(ex).json()
     exchangerate = ex_response["rates"]
-    app.logger.info(exchangerate)
 
     #g = (gdp_api
     #    + '&key={}'
